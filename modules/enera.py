@@ -39,7 +39,7 @@ def validate(company):
                     except Exception as e:
                         # pprint.pprint('2')
                         return {'error': 'It is not JSON information'}, status.HTTP_400_BAD_REQUEST
-                    # pprint.pprint('3')
+                    # print('3')
                     if json_info is None:  # valida que no este vacio
                         return {'error': 'It is not JSON information'}, status.HTTP_400_BAD_REQUEST
                     branch = Branch.objects(aps=json_info['data']['apMac']).first()  # se saca a que branch pertenece
@@ -70,5 +70,5 @@ def validate(company):
                     # return 'total de device se guardaron, %s' % len(devices)
                     return 'ok', status.HTTP_200_OK
     else:
-        print('no funciona')
+        # print('no funciona')
         return 'no encontrado', status.HTTP_404_NOT_FOUND

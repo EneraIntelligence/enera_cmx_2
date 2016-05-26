@@ -16,6 +16,7 @@ mongo = MongoEngine()
 
 connect('enera', username='', password='', host='query0.enera-intelligence.mx')
 
+
 class Clients(DynamicDocument):
     meta = {'collection': 'clients'}
 
