@@ -27,6 +27,7 @@ def validate(company):
             if request.method == 'GET':
                 # CmxUrl(url=request.url, metodo=request.method, data=request.data, json=request.json).save()
                 # print('Hello, is post %s' % request.method)
+                token = cliente.meraki['token']
                 # CmxUrl(url=url, metodo=request.method).save()
                 return Response(token, status.HTTP_200_OK, mimetype='text/plain')
             else:  # return 'Hello, is  %s' % request.method
