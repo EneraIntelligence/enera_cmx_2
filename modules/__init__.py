@@ -12,9 +12,9 @@ import pytz
 
 mongo = MongoEngine()
 
-# connect('enera', username='enera', password='enera', host='ds056998.mongolab.com', port=56998)
+connect('enera', username='enera', password='enera', host='ds056998.mongolab.com', port=56998)
 
-connect('enera', username='', password='', host='query0.enera-intelligence.mx')
+# connect('enera', username='', password='', host='query0.enera-intelligence.mx')
 
 
 class Clients(DynamicDocument):
@@ -32,6 +32,23 @@ class CmxRaw(DynamicDocument):
         #     self.created_at = datetime.datetime.now()
         self.updated_at = datetime.datetime.now(pytz.utc)
         return super(CmxRaw, self).save(*args, **kwargs)
+
+
+class Issues(DynamicDocument):
+    created_at = DateTimeField(default=datetime.datetime.now(pytz.utc))
+    updated_at = DateTimeField(default=datetime.datetime.now(pytz.utc))
+    "enera.issues"
+    meta = {'collection': 'issues'}
+
+    def save(self, *args, **kwargs):
+        # if not self.created_at:
+        #     self.created_at = datetime.datetime.now()
+        self.updated_at = datetime.datetime.now(pytz.utc)
+        return super(Issues, self).save(*args, **kwargs)
+
+
+class CmxP(DynamicDocument):
+    meta = {'collection': 'cmx_prueba'}
 
 
 class CmxUrl(DynamicDocument):
