@@ -81,7 +81,7 @@ def validate(company):
                             print(location)
                             print('------------------------')
                             CmxRaw(ap=ap, device=device, location=location).save()
-                        # return 'total de device se guardaron, %s' % len(devices)
+                        print('total de device se guardaron, %s' % len(devices))
                         return 'ok', status.HTTP_200_OK
         else:
             # print('no funciona')
