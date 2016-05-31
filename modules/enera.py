@@ -3,7 +3,7 @@
 import pytz
 from flask import Blueprint, current_app, request, Response, redirect
 from flask.ext.api import status
-from modules import mongo, Clients, CmxRaw, Branch
+from modules import mongo, Clients, CmxRaw, Branch, CmxUrl
 from bson import ObjectId
 import datetime
 import logging
