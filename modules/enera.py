@@ -33,12 +33,12 @@ def validate(company):
                     # CmxUrl(url=request.url, metodo=request.method, data=request.data, json=request.json).save()
                     # print('Hello, is post %s' % request.method)
                     token = cliente.meraki['token']
-                    # CmxUrl(url=url, metodo=request.method).save()
+                    # CmxUrl(url=url, metodo=request.method,).save()
                     return Response(token, status.HTTP_200_OK, mimetype='text/plain')
                 else:  # return 'Hello, is  %s' % request.method
                     if request.method == 'POST':
                         print('Hello, is post %s' % request.method)
-                        # CmxUrl(url=request.url, metodo=request.method, json=request.json).save()
+                        CmxUrl(url=request.url, metodo=request.method, json=request.json).save()
                         try:  # valida que sea un json
                             json_info = request.json
                         except Exception as e:
