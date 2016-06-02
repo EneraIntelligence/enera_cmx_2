@@ -6,9 +6,7 @@ from flask.ext.api import status
 from modules import mongo, Clients, CmxRaw, Branch, CmxUrl
 from bson import ObjectId
 import datetime
-import logging
-from logging.handlers import RotatingFileHandler, SMTPHandler
-from modules.handle_error import issues
+from modules.handle_error import logger
 import pprint
 
 prefix_module = 'enera'
@@ -49,17 +47,20 @@ def validate(company):
                         if json_info is None:  # valida que no este vacio
                             issues('It is not JSON vacio', request.url)
                             return {'error': 'It is not JSON information'}, status.HTTP_400_BAD_REQUEST
-                        print('se saca el branche')
+                        # print('se saca el branche')
+                        logger.info('se saca la branche')
                         branch = Branch.objects(aps=json_info['data']['apMac']).first()
                         # se saca a que branch pertenece
-                        pprint.pprint(branch['id'])
+                        # pprint.pprint(branch['id'])
+                        logger.info(branch['id'])
                         ap = {
                             "mac": json_info['data']['apMac'],
                             "tags": json_info['data']['apTags'],
                             "floors": json_info['data']['apFloors'],
                             "branche_id": branch['id'],
                         }
-                        print(ap)
+                        # print(ap)
+                        logger.info(ap)
                         devices = json_info['data']['observations']
                         # tz = pytz.timezone('America/Mexico_City')  # se define la zona horaria
                         for cel in devices:  # Second Example
@@ -81,16 +82,16 @@ def validate(company):
                             print(location)
                             print('------------------------')
                             CmxRaw(ap=ap, device=device, location=location).save()
-                        print('total de device se guardaron, %s' % len(devices))
+                        logger.info('total de dispositivos captados, %s' % len(devices))
+                        # print('total de device se guardaron, %s' % len(devices))
                         return 'ok', status.HTTP_200_OK
         else:
             # print('no funciona')
             return 'no encontrado', status.HTTP_404_NOT_FOUND
     except Exception as e:
         pprint.pprint(e)
-        # p1 = Exception.args
-        # pprint.pprint(p1)
-        issues(e, request.url)
+        logger.error('Failed in enera.py', exc_info=True)
+        # issues(e, request.url)
     finally:
         # print('por default')
         print('//////////////////////////////')

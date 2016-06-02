@@ -17,6 +17,7 @@ from logging.handlers import RotatingFileHandler, SMTPHandler
 
 application = FlaskAPI(__name__)
 # manager = Manager(application)
+application.config['PROPAGATE_EXCEPTIONS'] = True
 
 if 'Hacker' in os.environ:
     application.config.from_object(DevelopConfig)
@@ -43,16 +44,6 @@ def internal_error(exception):
 
 
 if __name__ == "__main__":
-    mail_handler = SMTPHandler(mailhost=('smtp.mailgun.org', 587),
-                               credentials=('servers@enera-intelligence.mx', '@smtpenera2016'),
-                               fromaddr='arosas@enera.mx',
-                               secure=('tls', 'enera-intelligence.mx', 'key-2eeac48a97fd2992ddb1e4c860d74470'),
-                               toaddrs='jose_asdrubal1@hotmail.com',
-                               subject='YourApplication Failed',
-                               )
-    mail_handler.setLevel(logging.ERROR)
-    application.logger.addHandler(mail_handler)
-
     application.run(
         # host=application.config['HOST'],
         # debug=application.config['DEBUG'],
