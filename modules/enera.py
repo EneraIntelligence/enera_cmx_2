@@ -87,7 +87,7 @@ def validate(company):
                                 "unc": cel['location']['unc']
                             }
                             print('location')
-                            print(location)
+                            # print(location)
                             print('------------------------')
                             CmxRaw(ap=ap, device=device, location=location).save()
                         # logger.info('total de dispositivos captados, %s')
