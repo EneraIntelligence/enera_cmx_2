@@ -5,6 +5,10 @@ import pprint
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+# try:
+
+# except Exception as e:
+# logger.error('Failed in enera.py', exc_info=True)
 
 # create a RotatingFileHandler
 file_error = logging.handlers.RotatingFileHandler('error.log', mode='a', maxBytes=10485760, encoding='utf8')
@@ -13,16 +17,32 @@ file_error.setLevel(logging.ERROR)
 formato = logging.Formatter('**** %(asctime)s - %(pathname)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s')
 file_error.setFormatter(formato)
 
-# create a file handler
-handler = logging.FileHandler('python.log')
-handler.setLevel(logging.ERROR)
+logger.addHandler(file_error)
 
-formatter = logging.Formatter('***********************  -  %(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
+# create a smtphandler
+mail_error = logging.handlers.SMTPHandler(mailhost=('smtp.mailgun.org', 587),
+                                          credentials=('servers@enera-intelligence.mx', '@smtpenera2016'),
+                                          fromaddr='servers@enera.mx',
+                                          toaddrs='issuestracker@enera.mx',
+                                          subject='Cmx Failed',
+                                          )
+
+mail_error.setLevel(logging.ERROR)
+
+formato2 = logging.Formatter('**** %(asctime)s - %(pathname)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s')
+mail_error.setFormatter(formato2)
+
+logger.addHandler(mail_error)
+
+# create a file handler
+handler = logging.handlers.RotatingFileHandler('error.log')
+handler.setLevel(logging.INFO)
+
+# formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+# handler.setFormatter(formatter)
 
 # add the handlers to the logger
-# logger.addHandler(handler)
-logger.addHandler(file_error)
+logger.addHandler(handler)
 
 
 # logger.info('******************')
@@ -30,31 +50,33 @@ logger.addHandler(file_error)
 # logger.info('Hello baby')
 
 
-# def issues(error, url):
-#     try:
-#         print('hola')
-#         pprint.pprint(error)
-#         lenguaje = {'lenguaje': 'python',
-#                     "plataforma": "cmx"
-#                     }
-#         issue = {
-#             "title": str(error),
-#             "platform": "cmx-env",
-#             "file": {
-#                 "line": "",
-#                 "path": str(url),
-#                 "context": ""
-#             }
-#         }
-#         print(issue)
-#         # pprint.pprint({data})
-#         Issues(lenguaje=lenguaje, issue=issue).save()
-#         print('se supone guardo')
-#     except Exception as e:
-#         print('handle')
-#         pprint.pprint(e)
-#         # class Handle:
-#         #     def __init__(logging.handlers.BufferingHandler):
+def issues(error, url):
+    try:
+        # print('hola')
+        # pprint.pprint(error)
+        lenguaje = {'lenguaje': 'python',
+                    "plataforma": "cmx"
+                    }
+        issue = {
+            "title": str(error),
+            "platform": "cmx-env",
+            "file": {
+                "line": "",
+                "path": str(url),
+                "context": ""
+            }
+        }
+        print(issue)
+        # pprint.pprint({data})
+        Issues(lenguaje=lenguaje, issue=issue).save()
+        print('se guardo el isue')
+    except Exception as e:
+        print('handle')
+        pprint.pprint(e)
+
+# class Handle:
+#     def __init__(logging.handlers.BufferingHandler):
+
 #
 #
 # def mail():
