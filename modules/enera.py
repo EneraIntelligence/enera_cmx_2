@@ -16,6 +16,8 @@ enera = Blueprint(prefix_module, __name__)
 @enera.route('/validate/<company>', methods=['GET', 'POST'])
 # @enera.route('/validate/<secret>', methods=['GET', 'POST'])
 def validate(company):
+    json = ''
+    ap = ''
     try:
         if len(company) == 24:
             # CmxUrl(url=request.url, metodo=request.method).save()
@@ -23,7 +25,7 @@ def validate(company):
             cliente = Clients.objects(id=ObjectId(com)).first()
             if not cliente:
                 print('no encontro cliente')
-                issues('It is not JSON information', request.url)
+                issues('It is not JSON information', request.url, json, ap)
                 logger.error('Failed in enera.py', exc_info=True)
                 return 'no valido', status.HTTP_404_NOT_FOUND
             else:
@@ -43,12 +45,12 @@ def validate(company):
                             json_info = request.json
                         except Exception as e:
                             # pprint.pprint('2')
-                            issues('It is not JSON information', request.url)
+                            issues('It is not JSON information', request.url, json, ap)
                             logger.error('Failed in enera.py', exc_info=True)
                             return {'error': 'information'}, status.HTTP_400_BAD_REQUEST
                         # print('3')
                         if json_info is None:  # valida que no este vacio
-                            issues('It is not JSON vacio', request.url)
+                            issues('It is not JSON vacio', request.url, json, ap)
                             logger.error('Failed in enera.py', exc_info=True)
                             return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
                         print('se saca el branche')
@@ -59,7 +61,7 @@ def validate(company):
                         else:
                             print('no existe el ap en las branche')
                             logger.error('Failed in enera.py', exc_info=True)
-                            issues('el ap no esta en una branche', request.url)
+                            issues('el ap no esta en una branche', request.url, json, ap)
                             return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
                         # bi = str(branch['id'])
                         ap = {
@@ -86,8 +88,9 @@ def validate(company):
                                 "lat_lng": [cel['location']['lat'], cel['location']['lng']],
                                 "unc": cel['location']['unc']
                             }
+                            json = cel['location']
                             print('location')
-                            # print(location)
+                            pprint.pprint(cel['location'])
                             print('------------------------')
                             CmxRaw(ap=ap, device=device, location=location).save()
                         # logger.info('total de dispositivos captados, %s')
@@ -99,7 +102,7 @@ def validate(company):
     except Exception as e:
         pprint.pprint(e)
         logger.error('Failed in enera.py', exc_info=True)
-        issues(e, request.url, json_info['data']['observations']['location'], ap)
+        issues(e, request.url, json, ap)
     finally:
         # print('por default')
         print('//////////////////////////////')
