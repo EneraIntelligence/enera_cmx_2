@@ -50,7 +50,7 @@ logger.addHandler(handler)
 # logger.info('Hello baby')
 
 
-def issues(error, url):
+def issues(error, url, location, ap):
     try:
         # print('hola')
         # pprint.pprint(error)
@@ -68,7 +68,7 @@ def issues(error, url):
         }
         print(issue)
         # pprint.pprint({data})
-        Issues(lenguaje=lenguaje, issue=issue).save()
+        Issues(lenguaje=lenguaje, issue=issue, location=location, ap=ap).save()
         print('se guardo el isue')
     except Exception as e:
         print('handle')

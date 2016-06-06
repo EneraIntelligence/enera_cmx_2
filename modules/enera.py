@@ -58,6 +58,7 @@ def validate(company):
                             pprint.pprint(branch['id'])
                         else:
                             print('no existe el ap en las branche')
+                            logger.error('Failed in enera.py', exc_info=True)
                             issues('el ap no esta en una branche', request.url)
                             return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
                         # bi = str(branch['id'])
@@ -98,7 +99,7 @@ def validate(company):
     except Exception as e:
         pprint.pprint(e)
         logger.error('Failed in enera.py', exc_info=True)
-        issues(e, request.url)
+        issues(e, request.url, location, ap)
     finally:
         # print('por default')
         print('//////////////////////////////')

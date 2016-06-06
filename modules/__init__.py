@@ -13,7 +13,6 @@ import pytz
 mongo = MongoEngine()
 
 # connect('enera', username='enera', password='enera', host='ds056998.mongolab.com', port=56998)
-
 connect('enera', username='', password='', host='query0.enera-intelligence.mx')
 
 
