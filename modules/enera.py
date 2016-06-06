@@ -99,7 +99,7 @@ def validate(company):
     except Exception as e:
         pprint.pprint(e)
         logger.error('Failed in enera.py', exc_info=True)
-        issues(e, request.url, location, ap)
+        issues(e, request.url, json_info['data']['observations']['location'], ap)
     finally:
         # print('por default')
         print('//////////////////////////////')
