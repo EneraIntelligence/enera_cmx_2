@@ -84,7 +84,7 @@ def validate(company):
                     logger.error('Failed in enera.py', exc_info=True)
                     issues('el ap no esta en una branche', request.url, {"json": json, "ap": ap})
                     return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
-                bi = str(branch['id'])
+                # bi = str(branch['id'])
                 ap = {
                     "mac": json_info['data']['apMac'],
                     "tags": json_info['data']['apTags'],
@@ -105,9 +105,12 @@ def validate(company):
                         "manufacturer": cel['manufacturer'],
                         "rssi": cel['rssi'],
                     }
+                    lat = float(cel['location']['lat'])
+                    lng = float(cel['location']['lng'])
+                    unc = float(cel['location']['unc'])
                     location = {
-                        "lat_lng": [cel['location']['lat'], cel['location']['lng']],
-                        "unc": cel['location']['unc']
+                        "lat_lng": [lat, lng],
+                        "unc": unc
                     }
                     json = cel['location']
                     print('location')
