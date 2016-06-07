@@ -23,7 +23,7 @@ logger.addHandler(file_error)
 mail_error = logging.handlers.SMTPHandler(mailhost=('smtp.mailgun.org', 587),
                                           credentials=('servers@enera-intelligence.mx', '@smtpenera2016'),
                                           fromaddr='servers@enera.mx',
-                                          toaddrs='issuestracker@enera.mx',
+                                          toaddrs='arosas@enera.mx',
                                           subject='Cmx Failed',
                                           )
 
@@ -50,7 +50,7 @@ logger.addHandler(handler)
 # logger.info('Hello baby')
 
 
-def issues(error, url, location, ap):
+def issues(error, url, datos):
     try:
         # print('hola')
         # pprint.pprint(error)
@@ -68,7 +68,7 @@ def issues(error, url, location, ap):
         }
         print(issue)
         # pprint.pprint({data})
-        Issues(lenguaje=lenguaje, issue=issue, location=location, ap=ap).save()
+        Issues(lenguaje=lenguaje, issue=issue, datos=datos).save()
         print('se guardo el isue')
     except Exception as e:
         print('handle')
