@@ -49,6 +49,7 @@ def tr(company):
 def validate(company):
     json = ''
     ap = ''
+    entries = []
     try:
         if len(company) == 24:
             # CmxUrl(url=request.url, metodo=request.method).save()
@@ -105,9 +106,9 @@ def validate(company):
                         "manufacturer": cel['manufacturer'],
                         "rssi": cel['rssi'],
                     }
-                    lat = float(cel['location']['lat'])
-                    lng = float(cel['location']['lng'])
-                    unc = float(cel['location']['unc'])
+                    lat = cel['location']['lat']
+                    lng = cel['location']['lng']
+                    unc = cel['location']['unc']
                     location = {
                         "lat_lng": [lat, lng],
                         "unc": unc
@@ -116,8 +117,9 @@ def validate(company):
                     print('location')
                     pprint.pprint(cel['location'])
                     print('------------------------')
-                    CmxRaw(ap=ap, device=device, location=location).save()
+                    # CmxRaw(ap=ap, device=device, location=location).save()
                 # logger.info('total de dispositivos captados, %s')
+                CmxRaw.objects.insert(entries)
                 print('total de dispositivos captados, %s' % len(devices))
                 return 'ok', status.HTTP_200_OK
         else:
