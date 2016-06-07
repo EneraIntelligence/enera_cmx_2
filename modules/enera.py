@@ -49,7 +49,9 @@ def tr(company):
 def validate(company):
     json = ''
     ap = ''
-    lat = 0, lng = 0, unc = 0
+    lat = 0
+    lng = 0
+    unc = 0
     entries = []
     try:
         if len(company) == 24:
