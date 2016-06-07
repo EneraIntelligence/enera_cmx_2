@@ -117,9 +117,8 @@ def validate(company):
                     print('location')
                     pprint.pprint(cel['location'])
                     print('------------------------')
-                    # CmxRaw(ap=ap, device=device, location=location).save()
+                    CmxRaw(ap=ap, device=device, location=location).save()
                 # logger.info('total de dispositivos captados, %s')
-                CmxRaw.objects.insert(entries)
                 print('total de dispositivos captados, %s' % len(devices))
                 return 'ok', status.HTTP_200_OK
         else:
