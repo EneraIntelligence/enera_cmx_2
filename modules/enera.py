@@ -106,9 +106,15 @@ def validate(company):
                         "manufacturer": cel['manufacturer'],
                         "rssi": cel['rssi'],
                     }
-                    lat = cel['location']['lat']
-                    lng = cel['location']['lng']
-                    unc = cel['location']['unc']
+                    if cel['location']['lat'] is None:
+                        # lat = cel['location']['lat']
+                        lat = 0
+                    if cel['location']['lng'] is None:
+                        # lng = cel['location']['lng']
+                        lng = 0
+                    if cel['location']['unc'] is None:
+                        # unc = cel['location']['unc']
+                        unc = 0
                     location = {
                         "lat_lng": [lat, lng],
                         "unc": unc
