@@ -70,7 +70,7 @@ def validate(company):
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             print('se saca el branche')
             # se saca a que branch pertenece
-            branch = Branch.objects(aps=json_info['data']['apMac']).first()
+            branch = Branch.objects(aps__in=str(json_info['data']['apMac'])).first()
             if branch:
                 pprint.pprint(branch['id'])
             else:
@@ -83,7 +83,7 @@ def validate(company):
                 "mac": json_info['data']['apMac'],
                 "tags": json_info['data']['apTags'],
                 "floors": json_info['data']['apFloors'],
-                "branche_id": branch['data']['id'],
+                "branche_id": branch['id'],
             }
             print('datos del ap')
             devices = json_info['data']['observations']
@@ -114,9 +114,9 @@ def validate(company):
                 device['rssi'] = cel['rssi']
 
                 if cel['location'] is not None:
-                    lat = cel['location']['lat']
-                    lng = cel['location']['lng']
-                    unc = cel['location']['unc']
+                    lat = float(cel['location']['lat'])
+                    lng = float(cel['location']['lng'])
+                    unc = float(cel['location']['unc'])
                     location['lat_lng'] = [lat, lng]
                     location['unc'] = unc
                 # json = cel['location']
