@@ -68,17 +68,16 @@ def validate(company):
                 issues('It is JSON empty', request.url, {"json": json, "ap": ap})
                 # logger.error('Failed in enera.py', exc_info=True)
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
-            print('se saca el branch')
+            # print('se saca el branch')
             # se saca a que branch pertenece
             branch = Branch.objects(aps=json_info['data']['apMac']).first()
-            if branch:
-                pprint.pprint(branch['id'])
-            else:
+            if not branch:
                 pprint.pprint(branch)
                 print('branch no encontrada')
                 # logger.error('Failed in enera.py', exc_info=True)
                 issues('el ap no esta en una branch', request.url, {"json": json, "ap": ap})
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
+
             # bi = str(branch['id'])
             ap = {
                 "mac": json_info['data']['apMac'],
@@ -86,7 +85,7 @@ def validate(company):
                 "floors": json_info['data']['apFloors'],
                 "branch_id": branch['id'],
             }
-            print('datos del ap')
+            # print('datos del ap')
             devices = json_info['data']['observations']
             # tz = pytz.timezone('America/Mexico_City')  # se define la zona horaria
             device = {
@@ -104,7 +103,6 @@ def validate(company):
                 "unc": 0
             }
             for cel in devices:  # Second Example
-
                 device['mac'] = cel['clientMac']
                 device['ipv4'] = cel['ipv4']
                 device['ipv6'] = cel['ipv6']
@@ -123,8 +121,8 @@ def validate(company):
                 # json = cel['location']
                 # print('location')
                 # pprint.pprint(cel['location'])
-                pprint.pprint(location)
-                print('------------------------')
+                # pprint.pprint(location)
+                # print('------------------------')
                 CmxRaw(ap=ap, device=device, location=location).save()
             # logger.info('total de dispositivos captados, %s')
             print('total de dispositivos captados, %s' % len(devices))
