@@ -68,22 +68,22 @@ def validate(company):
                 issues('It is JSON empty', request.url, {"json": json, "ap": ap})
                 # logger.error('Failed in enera.py', exc_info=True)
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
-            print('se saca el branche')
+            print('se saca el branch')
             # se saca a que branch pertenece
             branch = Branch.objects(aps__in=str(json_info['data']['apMac'])).first()
             if branch:
                 pprint.pprint(branch['id'])
             else:
-                print('branche no encontrada')
+                print('branch no encontrada')
                 # logger.error('Failed in enera.py', exc_info=True)
-                issues('el ap no esta en una branche', request.url, {"json": json, "ap": ap})
+                issues('el ap no esta en una branch', request.url, {"json": json, "ap": ap})
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             # bi = str(branch['id'])
             ap = {
                 "mac": json_info['data']['apMac'],
                 "tags": json_info['data']['apTags'],
                 "floors": json_info['data']['apFloors'],
-                "branche_id": branch['id'],
+                "branch_id": branch['id'],
             }
             print('datos del ap')
             devices = json_info['data']['observations']
