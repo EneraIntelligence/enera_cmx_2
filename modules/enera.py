@@ -74,11 +74,13 @@ def validate(company):
             if branch:
                 pprint.pprint(branch['id'])
             else:
-                pprint.pprint(branch['id'])
-                print('branch no encontrada')
-                # logger.error('Failed in enera.py', exc_info=True)
-                issues('el ap no esta en una branch', request.url, {"json": json, "ap": ap})
-                return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
+                try:
+                    pprint.pprint(branch)
+                    print('branch no encontrada')
+                except Exception as e:
+                    logger.error('Failed in enera.py', exc_info=True)
+                    issues('el ap no esta en una branch', request.url, {"json": json, "ap": ap})
+                    return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             # bi = str(branch['id'])
             ap = {
                 "mac": json_info['data']['apMac'],
