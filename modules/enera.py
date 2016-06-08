@@ -70,10 +70,11 @@ def validate(company):
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             print('se saca el branch')
             # se saca a que branch pertenece
-            branch = Branch.objects(aps__in=str(json_info['data']['apMac'])).first()
+            branch = Branch.objects(aps=json_info['data']['apMac']).first()
             if branch:
                 pprint.pprint(branch['id'])
             else:
+                pprint.pprint(branch)
                 print('branch no encontrada')
                 # logger.error('Failed in enera.py', exc_info=True)
                 issues('el ap no esta en una branch', request.url, {"json": json, "ap": ap})
@@ -120,7 +121,7 @@ def validate(company):
                     location['lat_lng'] = [lat, lng]
                     location['unc'] = unc
                 # json = cel['location']
-                print('location')
+                # print('location')
                 # pprint.pprint(cel['location'])
                 pprint.pprint(location)
                 print('------------------------')
