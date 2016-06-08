@@ -9,7 +9,7 @@ from bson import ObjectId
 from flask import Blueprint, request, Response
 from flask.ext.api import status
 
-from modules import Clients, CmxRaw, Branch
+from modules import Clients, CmxRaw, Branch, CmxUrl
 from modules.handle_error import logger, issues
 
 prefix_module = 'enera'
@@ -29,16 +29,11 @@ def tr(company):
                 logger.error('Failed in enera.py', exc_info=True)
                 return 'not found', status.HTTP_404_NOT_FOUND
             else:
-                # token = cliente.meraki['token']
+                token = cliente.meraki['token']
                 return Response(token, status.HTTP_200_OK, mimetype='text/plain')
         else:
             return 'not found', status.HTTP_404_NOT_FOUND
     except Exception as e:
-        exc_type, exc_value, exc_traceback = sys.exc_info()
-        pprint.pprint(exc_type)
-        print('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+')
-        print(e.args[0])
-        print('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+')
         logger.error('Failed in enera.py', exc_info=True)
         issues(e, request.url, {"json": ""})
 
@@ -75,7 +70,7 @@ def validate(company):
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             print('se saca el branche')
             # se saca a que branch pertenece
-            branch = Branch.objects(aps=json_info['apMac']).first()
+            branch = Branch.objects(aps=json_info['data']['apMac']).first()
             if branch:
                 pprint.pprint(branch['id'])
             else:
@@ -85,13 +80,13 @@ def validate(company):
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             # bi = str(branch['id'])
             ap = {
-                "mac": json_info['apMac'],
-                "tags": json_info['apTags'],
-                "floors": json_info['apFloors'],
-                "branche_id": branch['id'],
+                "mac": json_info['data']['apMac'],
+                "tags": json_info['data']['apTags'],
+                "floors": json_info['data']['apFloors'],
+                "branche_id": branch['data']['id'],
             }
             print('datos del ap')
-            devices = json_info['observations']
+            devices = json_info['data']['observations']
             # tz = pytz.timezone('America/Mexico_City')  # se define la zona horaria
             device = {
                 "mac": '',
