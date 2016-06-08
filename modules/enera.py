@@ -1,13 +1,16 @@
 #!/usr/bin/python
 # coding=utf-8
-import pytz
-from flask import Blueprint, current_app, request, Response, redirect
-from flask.ext.api import status
-from modules import mongo, Clients, CmxRaw, Branch, CmxUrl
-from bson import ObjectId
 import datetime
-from modules.handle_error import logger, issues
 import pprint
+import sys, traceback
+
+import pytz
+from bson import ObjectId
+from flask import Blueprint, request, Response
+from flask.ext.api import status
+
+from modules import Clients, CmxRaw, Branch
+from modules.handle_error import logger, issues
 
 prefix_module = 'enera'
 enera = Blueprint(prefix_module, __name__)
@@ -26,33 +29,28 @@ def tr(company):
                 logger.error('Failed in enera.py', exc_info=True)
                 return 'not found', status.HTTP_404_NOT_FOUND
             else:
-                token = cliente.meraki['token']
+                # token = cliente.meraki['token']
                 return Response(token, status.HTTP_200_OK, mimetype='text/plain')
         else:
             return 'not found', status.HTTP_404_NOT_FOUND
     except Exception as e:
-        pprint.pprint(e)
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        pprint.pprint(exc_type)
+        print('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+')
+        print(e.args[0])
+        print('-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+')
+
         logger.error('Failed in enera.py', exc_info=True)
-        issue = {
-            "title": str(e),
-            "platform": "cmx-env",
-            "file": {
-                "line": "",
-                "path": str(request.url),
-                "context": ""
-            }
-        }
-        issues(e, issue)
+        issues(e, request.url, {"json": ""})
 
 
 @enera.route('/validate/<company>', methods=['POST'])
 def validate(company):
     json = ''
     ap = ''
-    lat = 0
-    lng = 0
-    unc = 0
-    entries = []
+    lat = float
+    lng = float
+    unc = float
     try:
         if len(company) == 24:
             # CmxUrl(url=request.url, metodo=request.method).save()
@@ -111,12 +109,15 @@ def validate(company):
                     }
                     if cel['location']['lat'] is not None:
                         lat = cel['location']['lat']
+                        print(lat)
                         # lat = 0
                     if cel['location']['lng'] is not None:
                         lng = cel['location']['lng']
+                        print(lng)
                         # lng = 0
                     if cel['location']['unc'] is not None:
                         unc = cel['location']['unc']
+                        print(unc)
                         # unc = 0
                     location = {
                         "lat_lng": [lat, lng],
@@ -124,7 +125,7 @@ def validate(company):
                     }
                     json = cel['location']
                     print('location')
-                    pprint.pprint(cel['location'])
+                    # pprint.pprint(cel['location'])
                     print('------------------------')
                     CmxRaw(ap=ap, device=device, location=location).save()
                 # logger.info('total de dispositivos captados, %s')
@@ -133,7 +134,7 @@ def validate(company):
         else:
             return 'not found', status.HTTP_404_NOT_FOUND
     except Exception as e:
-        pprint.pprint(e)
+        pprint.pprint(e.args)
         logger.error('Failed in enera.py', exc_info=True)
         issues(e, request.url, {"json": json, "ap": ap})
     finally:  # print('por default')
