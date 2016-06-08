@@ -47,9 +47,6 @@ def tr(company):
 def validate(company):
     json = ''
     ap = ''
-    lat = float
-    lng = float
-    unc = float
 
     if len(company) == 24:
         # CmxUrl(url=request.url, metodo=request.method).save()
@@ -58,13 +55,14 @@ def validate(company):
         if not cliente:
             print('no encontro cliente')
             issues('url no valida no se encontro cliente', request.url, {"json": json, "ap": ap})
-            logger.error('Failed in enera.py', exc_info=True)
+            # logger.error('Failed in enera.py', exc_info=True)
             return 'no valido', status.HTTP_404_NOT_FOUND
         else:
             print('--')
             # CmxUrl(url=request.url, metodo=request.method, json=request.json).save()
             try:  # valida que sea un json
                 json_info = request.json
+                pprint.pprint(json_info)
             except Exception as e:
                 # pprint.pprint('2')
                 issues('It is not JSON information', request.url, {"json": json, "ap": ap})
@@ -72,28 +70,28 @@ def validate(company):
                 return {'error': 'information'}, status.HTTP_400_BAD_REQUEST
             # print('3')
             if json_info is None:  # valida que no este vacio
-                issues('It is JSON vacio', request.url, {"json": json, "ap": ap})
-                logger.error('Failed in enera.py', exc_info=True)
+                issues('It is JSON empty', request.url, {"json": json, "ap": ap})
+                # logger.error('Failed in enera.py', exc_info=True)
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             print('se saca el branche')
             # se saca a que branch pertenece
-            branch = Branch.objects(aps=json_info['data']['apMac']).first()
+            branch = Branch.objects(aps=json_info['apMac']).first()
             if branch:
                 pprint.pprint(branch['id'])
             else:
-                print('no existe el ap en las branche')
-                logger.error('Failed in enera.py', exc_info=True)
+                print('branche no encontrada')
+                # logger.error('Failed in enera.py', exc_info=True)
                 issues('el ap no esta en una branche', request.url, {"json": json, "ap": ap})
                 return {'error': ' information'}, status.HTTP_400_BAD_REQUEST
             # bi = str(branch['id'])
             ap = {
-                "mac": json_info['data']['apMac'],
-                "tags": json_info['data']['apTags'],
-                "floors": json_info['data']['apFloors'],
+                "mac": json_info['apMac'],
+                "tags": json_info['apTags'],
+                "floors": json_info['apFloors'],
                 "branche_id": branch['id'],
             }
             print('datos del ap')
-            devices = json_info['data']['observations']
+            devices = json_info['observations']
             # tz = pytz.timezone('America/Mexico_City')  # se define la zona horaria
             device = {
                 "mac": '',
@@ -104,6 +102,10 @@ def validate(company):
                 "os": '',
                 "manufacturer": '',
                 "rssi": ''
+            }
+            location = {
+                "lat_lng": [0, 0],
+                "unc": 0
             }
             for cel in devices:  # Second Example
 
@@ -116,24 +118,22 @@ def validate(company):
                 device['manufacturer'] = cel['manufacturer']
                 device['rssi'] = cel['rssi']
 
-                location = ''
-
                 if cel['location'] is not None:
                     lat = cel['location']['lat']
                     lng = cel['location']['lng']
                     unc = cel['location']['unc']
-                    location = {
-                        "lat_lng": [lat, lng],
-                        "unc": unc
-                    }
-
-                #json = cel['location']
+                    location['lat_lng'] = [lat, lng]
+                    location['unc'] = unc
+                # json = cel['location']
                 print('location')
                 # pprint.pprint(cel['location'])
+                pprint.pprint(location)
                 print('------------------------')
                 CmxRaw(ap=ap, device=device, location=location).save()
             # logger.info('total de dispositivos captados, %s')
             print('total de dispositivos captados, %s' % len(devices))
             return 'ok', status.HTTP_200_OK
     else:
+        print('codigo no valido')
+        issues('codigo no valido', request.url, {"json": json, "ap": ap})
         return 'not found', status.HTTP_404_NOT_FOUND
