@@ -62,7 +62,7 @@ def validate(company):
             # CmxUrl(url=request.url, metodo=request.method, json=request.json).save()
             try:  # valida que sea un json
                 json_info = request.json
-                pprint.pprint(json_info)
+                # pprint.pprint(json_info)
             except Exception as e:
                 # pprint.pprint('2')
                 issues('It is not JSON information', request.url, {"json": json, "ap": ap})
