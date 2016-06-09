@@ -21,6 +21,7 @@ class Clients(DynamicDocument):
 
 
 class CmxRaw(DynamicDocument):
+    # print('modelo :' + str(datetime.datetime.now()))
     created_at = DateTimeField(default=datetime.datetime.now(pytz.utc))
     updated_at = DateTimeField(default=datetime.datetime.now(pytz.utc))
 

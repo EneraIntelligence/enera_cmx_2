@@ -20,19 +20,19 @@ file_error.setFormatter(formato)
 logger.addHandler(file_error)
 
 # create a smtphandler
-# mail_error = logging.handlers.SMTPHandler(mailhost=('smtp.mailgun.org', 587),
-#                                           credentials=('servers@enera-intelligence.mx', '@smtpenera2016'),
-#                                           fromaddr='servers@enera.mx',
-#                                           toaddrs='arosas@enera.mx',
-#                                           subject='Cmx Failed',
-#                                           )
-#
-# mail_error.setLevel(logging.ERROR)
-#
-# formato2 = logging.Formatter('**** %(asctime)s - %(pathname)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s')
-# mail_error.setFormatter(formato2)
-#
-# logger.addHandler(mail_error)
+mail_error = logging.handlers.SMTPHandler(mailhost=('smtp.mailgun.org', 587),
+                                          credentials=('servers@enera-intelligence.mx', '@smtpenera2016'),
+                                          fromaddr='servers@enera.mx',
+                                          toaddrs='arosas@enera.mx',
+                                          subject='Cmx Failed',
+                                          )
+
+mail_error.setLevel(logging.ERROR)
+
+formato2 = logging.Formatter('**** %(asctime)s - %(pathname)s - %(module)s - %(funcName)s - %(lineno)d - %(message)s')
+mail_error.setFormatter(formato2)
+
+logger.addHandler(mail_error)
 
 # create a file handler
 handler = logging.handlers.RotatingFileHandler('error.log')
